@@ -1,0 +1,8 @@
+*.tmp
+*.secret
+
+team.txt
+team_names.txt
+*.swp
+data/*
+
