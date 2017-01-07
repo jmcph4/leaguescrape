@@ -2,6 +2,7 @@ from time import gmtime, strftime, sleep
 from urllib.request import urlopen
 from urllib.error import HTTPError
 import json
+import os
 
 # files
 TEAM_FILE_PATH = "team.txt"
@@ -11,7 +12,7 @@ DATA_ROOT = "data/"
 # API constants
 API_KEY = open(API_KEY_PATH, "r").read()
 API_REGION = "OC1" # oceania
-API_ROOT = "https://oce.api.pvp.net/api/lol/oce/v1.3/"
+API_ROOT = "https://oce.api.pvp.net/"
 API_ENDPOINT_CURRENT_GAME = API_ROOT + "observer-mode/rest/consumer/getSpectatorGameInfo/" + API_REGION + "/{0}?api_key=" + API_KEY
 API_THROTTLE_MAX_REQUESTS = 10 # 10 requests every
 API_THROTTLE_WINDOW = 10 # 10 seconds
@@ -34,15 +35,19 @@ def save(summoner_id):
             sleep(API_BACKOFF)
         
 
-    raw_data = response.read()
-
-    json_data = json.loads(raw_data)
-
+    raw_data = response.read().decode("utf-8")
+    print(str(raw_data))
+    json_data = json.loads(str(raw_data))
     game_id = json_data["gameId"]
-    
-    current_time = str(gmtime())
-
+    current_time = strftime("%Y-%m-%dT%H_%M_%S", gmtime())
     save_location = DATA_ROOT + "{0}/{1}/{2}.json".format(summoner_id, game_id, current_time)
+
+    if not os.path.exists(os.path.dirname(save_location)):
+        try:
+            os.makedirs(os.path.dirname(save_location))
+        except OSError as e:
+            if e.errno != errno.EEXIST:
+                raise
 
     with open(save_location, "w") as file:
         file.write(raw_data)
