@@ -15,7 +15,7 @@ API_REGION = "OC1" # oceania
 API_ROOT = "https://oce.api.pvp.net/"
 API_ENDPOINT_CURRENT_GAME = API_ROOT + "observer-mode/rest/consumer/getSpectatorGameInfo/" + API_REGION + "/{0}?api_key=" + API_KEY
 API_THROTTLE_MAX_REQUESTS = 10 # 10 requests every
-API_THROTTLE_WINDOW = 10 # 10 seconds
+API_THROTTLE_WINDOW = 60 * 5 # 10 seconds
 API_BACKOFF = 60 * 60 # wait an hour if told to back off
 
 
